@@ -44,7 +44,7 @@ namespace malashenko {
     private:
     size_t length_;
     point_t * tops_;
-    point_t pos_;
+    point_t pos_; 
   };
 
   struct Triangle : Shape {
@@ -127,23 +127,7 @@ namespace malashenko {
 
   rectangle_t Polygon::getFrameRect() const
   {
-    rectangle_t resRect;
-    double minX = tops_[0].x, minY = tops_[0].y;
-    double maxX = tops_[0].x, maxY = tops_[0].y;
-
-    for (size_t i = 1; i < length_; ++i) {
-      point_t p = tops_[i];
-      minX = std::min(minX, p.x);
-      minY = std::min(minY, p.y);
-      maxX = std::max(maxX, p.x);
-      maxY = std::max(maxY, p.y);
-    }
-
-    resRect.width = maxX - minX;
-    resRect.height = maxY - minY;
-    resRect.pos = {minX + resRect.width / 2, minY + resRect.height / 2};
-
-    return resRect;
+    return generalGetFrameRect(tops_, length_);
   }
   
   void Polygon::move(point_t p)
@@ -182,16 +166,10 @@ namespace malashenko {
 
   rectangle_t Triangle::getFrameRect() const
   {
-    rectangle_t resRect;
-    double minX = std::min(a_.x, b_.x, c_.x);
-    double maxX = std::max(a_.x, b_.x, c_.x);
-    double minY = std::min(a_.y, b_.y, c_.y);
-    double maxY = std::max(a_.y, b_.y, c_.y);
-    
-    resRect.width = maxX - minX;
-    resRect.height = maxY - minY;
-    resRect.pos = {minX + resRect.width / 2, minY + resRect.height / 2};
-    return resRect;
+    point_t * tops = new point_t[3]{a_, b_, c_};
+    rectangle_t res = generalGetFrameRect(tops, 3);
+    delete[] tops;
+    return res;
   }
 
   void Triangle::move(point_t p)
@@ -216,10 +194,86 @@ namespace malashenko {
 
   }
 
+  rectangle_t generalGetFrameRect(const point_t const * tops, size_t len)
+  {
+    rectangle_t resRect;
+    double minX = tops[0].x, minY = tops[0].y;
+    double maxX = tops[0].x, maxY = tops[0].y;
+
+    for (size_t i = 1; i < len; ++i) {
+      point_t p = tops[i];
+      minX = std::min(minX, p.x);
+      minY = std::min(minY, p.y);
+      maxX = std::max(maxX, p.x);
+      maxY = std::max(maxY, p.y);
+    }
+
+    resRect.width = maxX - minX;
+    resRect.height = maxY - minY;
+    resRect.pos = {minX + resRect.width / 2, minY + resRect.height / 2};
+
+    return resRect;
+  }
+
+  void extend(point_t ** oldTops, const point_t * topsToAdd, size_t & l, size_t k)
+  {
+    point_t * newTops = new point_t[l + k];
+    size_t i = 0;
+    for (;i < l; ++i) {
+      newTops[i] = (*oldTops)[i];
+    }
+    for (;i < l + k; ++i) {
+      newTops[i] = topsToAdd[i - l];
+    }
+    l += k;
+    delete *oldTops;
+    *oldTops = newTops;
+
+  }
+  point_t * getCordsOfFrame(const rectangle_t & frame)
+  {
+    point_t * cords = new point_t[4];
+    cords[0] = {frame.pos.x - (frame.width / 2), frame.pos.y - (frame.height / 2)};
+    cords[1] = {frame.pos.x - (frame.width / 2), frame.pos.y + (frame.height / 2)};
+    cords[2] = {frame.pos.x + (frame.width / 2), frame.pos.y - (frame.height / 2)};
+    cords[3] = {frame.pos.x + (frame.width / 2), frame.pos.y + (frame.height / 2)};
+    return cords;
+
+  }
+
+  void showInfo(const Shape * const * figures, size_t len)
+  {
+    std::cout << "INFO ABOUT FIGURES\n";
+    size_t fullSum = 0;
+    size_t topsLen = 0;
+    point_t * tops = new point_t[topsLen];
+
+    for (size_t i = 0; i < len; ++i) {
+      size_t figureArea = figures[i] -> getArea();
+      rectangle_t figureFrameRect = figures[i] -> getFrameRect(); 
+      point_t * frameRectCords = getCordsOfFrame(figureFrameRect);
+      extend(&tops, frameRectCords, topsLen, 4);
+      fullSum += figureArea;
+      std::cout << "Площадь фигуры №" << i + 1 << ":" << figureArea << "\n";
+      std::cout << "Ограничивающий прямиоугольник фигуры №" << i + 1 << " имеет следующие координаты:\n";
+      for (size_t i = 0; i < 4; ++i) {
+        std::cout << "\t(" << frameRectCords[i].x << "," << frameRectCords[i].y << ")\n";
+      }
+      delete[] frameRectCords;
+    }
+    std::cout << "\n";
+    std::cout << "Суммарная площадь всех фигур равна: " << fullSum << "\n";
+    rectangle_t allFigguresFrame = generalGetFrameRect(tops, topsLen);
+    point_t * allFiguresFrameRectCords = getCordsOfFrame(allFigguresFrame);
+    std::cout << "Ограничивающий прямиоугольник всех фигур имеет следующие координаты:\n";
+    for (size_t i = 0; i < 4; ++i) {
+      std::cout << "\t(" << allFiguresFrameRectCords[i].x << "," << allFiguresFrameRectCords[i].y << ")\n";
+    }
+  }
 }
+
+
 int main()
 {
   std::cout << "Initial commit\n";
 }
-
-
