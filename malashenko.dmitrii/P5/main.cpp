@@ -322,7 +322,7 @@ namespace malashenko {
       extend(&tops, frameRectCords, topsLen, 4);
       fullSum += figureArea;
       std::cout << "Площадь фигуры №" << i + 1 << ":" << figureArea << "\n";
-      std::cout << "Ограничивающий прямиоугольник фигуры №" << i + 1 << " имеет следующие координаты:\n";
+      std::cout << "Кординаты ограничивающего прямиоугольника фигуры №" << i + 1 << ":\n";
       for (size_t i = 0; i < 4; ++i) {
         std::cout << "\t(" << frameRectCords[i].x << "," << frameRectCords[i].y << ")\n";
       }
@@ -330,12 +330,14 @@ namespace malashenko {
     }
     std::cout << "\n";
     std::cout << "Суммарная площадь всех фигур равна: " << fullSum << "\n";
-    rectangle_t allFigguresFrame = generalGetFrameRect(tops, topsLen);
-    point_t * allFiguresFrameRectCords = getCordsOfFrame(allFigguresFrame);
+    rectangle_t figgureFrame = generalGetFrameRect(tops, topsLen);
+    point_t * figuresFrameCords = getCordsOfFrame(figgureFrame);
     std::cout << "Ограничивающий прямиоугольник всех фигур имеет следующие координаты:\n";
     for (size_t i = 0; i < 4; ++i) {
-      std::cout << "\t(" << allFiguresFrameRectCords[i].x << "," << allFiguresFrameRectCords[i].y << ")\n";
+      std::cout << "\t(" << figuresFrameCords[i].x << "," << figuresFrameCords[i].y << ")\n";
     }
+
+    delete[] figuresFrameCords;
   }
 }
 
