@@ -5,37 +5,30 @@
 
 namespace malasenko {
 
-  std::ostream & outMtx(std::ostream & out, const int* matrix, size_t rows, size_t cols) {
-    for (size_t i = 0; i < rows; ++i) {
-      for (size_t j = 0; j < cols; ++j) {
-        out << matrix[i * cols + j] << " ";
-      }
+  std::ostream & outMtx(std::ostream & out, const int * matrix, size_t rows, size_t cols)
+  {
+    size_t n = rows * cols;
+    if (n == 0) {
+      return out;
     }
+
+    for (size_t i = 0; i + 1 < n; ++i) {
+      out << matrix[i] << ' ';
+    }
+    out << matrix[n - 1];
     return out;
   }
 
-  int * createMtx(size_t rows, size_t cols) {
-    int * nums = nullptr;
-    try {
-      nums = reinterpret_cast< int * >(malloc(rows * cols * sizeof(int)));
-    } catch (const std::bad_alloc &) {
-      std::cerr << "malloc error\n";
-      return nullptr;
-    }
-    return nums;
-  }
-
-  std::istream & readMtx(std::istream & in, int * nums, size_t & rows, size_t & cols) {
+  std::istream & readMtx(std::istream & in, int * nums, size_t & rows, size_t & cols)
+  {
     for (size_t i = 0; i < rows * cols; ++i) {
-      if (!(in >> nums[i])) {
-        std::cerr << "not enough data in file\n";
-        return in;
-      }
+      in >> nums[i];
     }
     return in;
   }
 
-  int cntLocMax(int * mtx, size_t rows, size_t cols) {
+  int cntLocMax(int * mtx, size_t rows, size_t cols)
+  {
     if (rows <= 2 || cols <= 2) {
       return 0;
     }
@@ -52,14 +45,15 @@ namespace malasenko {
               }
             }
           }
-          res+=isLocMax;
+          res += isLocMax;
         }
       }
     }
     return res;
   }
 
-  void lftBotClk(int * mtx, size_t rows, size_t cols) {
+  void lftBotClk(int * mtx, size_t rows, size_t cols)
+  {
     if (cols <= 0 || rows <= 0) {
       return;
     }
@@ -97,7 +91,8 @@ namespace malasenko {
 }
 
 
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv)
+{
   if (argc < 4) {
     std::cerr << "Not enough arguments\n";
     return 1;
@@ -127,8 +122,6 @@ int main(int argc, char ** argv) {
     return 1;
   }
 
-  int * nums = nullptr;
-  int statNums[10000] = {};
   size_t rows = 0;
   size_t cols = 0;
 
@@ -136,14 +129,14 @@ int main(int argc, char ** argv) {
     std::cerr << "failed to read matrix dimensions\n";
     return 1;
   }
-
-  nums = (mode == 1) ? statNums : mal::createMtx(rows, cols);
+  int fixedLengthNums[10000];
+  int * nums = (mode == 1) ? fixedLengthNums : reinterpret_cast< int * >(malloc(rows * cols * sizeof(int)));
 
   if (!nums) {
     std::cerr << "Problem with matrix\n";
     if (mode == 2) {
       free(nums);
-    };
+    }
     return 2;
   }
 
@@ -151,7 +144,7 @@ int main(int argc, char ** argv) {
     std::cerr << "Problem with file reading\n";
     if (mode == 2) {
       free(nums);
-    };
+    }
     return 1;
   }
 
@@ -160,7 +153,7 @@ int main(int argc, char ** argv) {
     std::cerr << "Problem with output file opening\n";
     if (mode == 2) {
       free(nums);
-    };
+    }
     return 1;
   }
 
@@ -170,6 +163,6 @@ int main(int argc, char ** argv) {
 
   if (mode == 2) {
     free(nums);
-  };
+  }
   return 0;
 }
