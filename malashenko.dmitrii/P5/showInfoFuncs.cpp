@@ -1,0 +1,61 @@
+#include "showInfoFuncs.hpp"
+#include "generalFuncs.hpp"
+
+namespace malashenko {
+  point_t * getCordsOfFrame(const rectangle_t & frame)
+  {
+    point_t * cords = new point_t[4];
+    cords[0] = {frame.pos.x - (frame.width / 2), frame.pos.y - (frame.height / 2)};
+    cords[1] = {frame.pos.x - (frame.width / 2), frame.pos.y + (frame.height / 2)};
+    cords[2] = {frame.pos.x + (frame.width / 2), frame.pos.y - (frame.height / 2)};
+    cords[3] = {frame.pos.x + (frame.width / 2), frame.pos.y + (frame.height / 2)};
+    return cords;
+  }
+
+  void extend(point_t ** oldTops, const point_t * topsToAdd, size_t & l, size_t k)
+  {
+    point_t * newTops = new point_t[l + k];
+    size_t i = 0;
+    for (;i < l; ++i) {
+      newTops[i] = (*oldTops)[i];
+    }
+    for (;i < l + k; ++i) {
+      newTops[i] = topsToAdd[i - l];
+    }
+    l += k;
+    delete[] *oldTops;
+    *oldTops = newTops;
+  }
+
+
+  void showInfo(const Shape * const * figures, size_t len)
+  {
+    std::cout << "INFO ABOUT FIGURES:\n";
+    double fullSum = 0;
+    size_t topsLen = 0;
+    point_t * tops = new point_t[topsLen];
+    for (size_t i = 0; i < len; ++i) {
+      double figureArea = figures[i] -> getArea();
+      rectangle_t figureFrameRect = figures[i] -> getFrameRect();
+      point_t * frameRectCords = getCordsOfFrame(figureFrameRect);
+      extend(&tops, frameRectCords, topsLen, 4);
+      fullSum += figureArea;
+      std::cout << "Площадь фигуры №" << i + 1 << ":" << figureArea << "\n";
+      std::cout << "Кординаты ограничивающего прямиоугольника фигуры №" << i + 1 << ":\n";
+      for (size_t i = 0; i < 4; ++i) {
+        std::cout << "\t(" << frameRectCords[i].x << ", " << frameRectCords[i].y << ")\n";
+      }
+      delete[] frameRectCords;
+    }
+    std::cout << "\n";
+    std::cout << "Суммарная площадь всех фигур равна: " << fullSum << "\n";
+    rectangle_t figgureFrame = generalGetFrameRect(tops, topsLen);
+    point_t * figuresFrameCords = getCordsOfFrame(figgureFrame);
+    std::cout << "Ограничивающий прямиоугольник всех фигур имеет следующие координаты:\n";
+    for (size_t i = 0; i < 4; ++i) {
+      std::cout << "\t(" << figuresFrameCords[i].x << ", " << figuresFrameCords[i].y << ")\n";
+    }
+    delete[] figuresFrameCords;
+    delete[] tops;
+  }
+}
