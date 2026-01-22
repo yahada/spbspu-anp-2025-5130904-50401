@@ -64,11 +64,9 @@ namespace malashenko {
       str[i++] = sym;
     }
     str[i++] = '\0';
-
     if (is_skipws) {
       in >> std::skipws;
     }
-
     return str;
   }
 
@@ -91,7 +89,6 @@ namespace malashenko {
     }
     return 0;
   }
-
 
   char * rmvVol(char * str, size_t size)
   {
@@ -118,14 +115,18 @@ namespace malashenko {
 int main()
 {
   namespace mal = malashenko;
-
-  
   char * str = mal::getLine(std::cin);
-  if (!str) {
+  if (!str || std::cin.fail()) {
     std::cerr << "problem with input\n";
+    delete[] str;
     return 1;
   }
   size_t size = mal::strLen(str);
+  if (!size) {
+    std::cerr << "The input must not be empty\n";
+    delete[] str;
+    return 1;
+  }
   size_t isRepDgt = mal::repDgt(str, size);
   char * noVolStr = mal::rmvVol(str, size);
 
