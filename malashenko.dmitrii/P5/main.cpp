@@ -22,7 +22,7 @@ int main()
   try {
     figures[0] = new mal::Rectangle(4, 6, {10, 10});
     figures[1] = new mal::Triangle(triangleTops);
-    mal::point_t * tops = new mal::point_t[3]{{0, 0}, {3, 3}, {1, 2}};
+    tops = new mal::point_t[3]{{0, 0}, {3, 3}, {1, 2}};
     figures[2] = new mal::Polygon(tops, 3);
   } catch (const std::exception & e) {
     std::cerr << e.what() << "\n";

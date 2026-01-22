@@ -11,6 +11,10 @@ namespace malashenko {
     void move(point_t p) override;
     void move(double dx, double dy) override;
     void scale(double k) override;
+    ~Polygon() override
+    {
+    delete[] tops_;
+    }
 
   private:
     size_t length_;
