@@ -5,9 +5,9 @@ int main()
   double k = 0.0;
 
   mal::point_t scalePoint= {0.0, 0.0};
-  std::cout << "ENTER SCALE COEFFICIENT AND SCALE POINT (CORD X AND Y): ";
+  std::cout << "ENTER SCALE POINT (CORD X AND Y) AND SCALE COEFFICIENT : ";
 
-  if (!(std::cin >> k >> scalePoint.x >> scalePoint.y)){
+  if (!(std::cin >> scalePoint.x >> scalePoint.y >> k)){
     std::cerr << "INPUT PROBLEMS\n";
     return 1;
   } else if (k < 0) {
