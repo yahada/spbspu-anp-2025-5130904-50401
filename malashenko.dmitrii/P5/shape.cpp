@@ -11,6 +11,7 @@ namespace malashenko {
 
       double xdist = (firstCord.x - secondcord.x) * k;
       double ydist = (firstCord.y - secondcord.y) * k;
+
       figure[i]->move(xdist, ydist);
     }
   }

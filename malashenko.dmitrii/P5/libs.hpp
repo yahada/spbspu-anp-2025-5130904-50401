@@ -6,6 +6,6 @@
 #include "rectangle.hpp"
 #include "polygon.hpp"
 #include "triangle.hpp"
-#include "generalFuncs.hpp"
-#include "showInfoFuncs.hpp"
+#include "general_funcs.hpp"
+#include "show_info_funcs.hpp"
 #endif

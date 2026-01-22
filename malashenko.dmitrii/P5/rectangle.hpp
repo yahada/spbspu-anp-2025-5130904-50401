@@ -2,6 +2,7 @@
 #define RECT
 #include "pod.hpp"
 #include "shape.hpp"
+#include <iostream>
 namespace malashenko {
   struct Rectangle : Shape {
     Rectangle(double width, double height, point_t pos);
@@ -11,7 +12,7 @@ namespace malashenko {
     void move(double dx, double dy) override;
     void scale(double k) override;
 
-    private:
+  private:
     double width_, height_;
     point_t pos_;
   };

@@ -1,19 +1,24 @@
 #include "libs.hpp"
-
 int main()
 {
   namespace mal = malashenko;
   double k = 0.0;
+
   mal::point_t scalePoint= {0.0, 0.0};
   std::cout << "ENTER SCALE COEFFICIENT AND SCALE POINT (CORD X AND Y): ";
-  if (!(std::cin >> k >> scalePoint.x >> scalePoint.y) || k < 0){
-    std::cerr << "Input problems\n";
+
+  if (!(std::cin >> k >> scalePoint.x >> scalePoint.y)){
+    std::cerr << "INPUT PROBLEMS\n";
+    return 1;
+  } else if (k < 0) {
+    std::cerr << "SCALE COEFFICIENT MUST BE POSITIVE\n";
     return 1;
   }
 
   mal::Shape * figures[3] = {nullptr, nullptr, nullptr};
   mal::point_t triangleTops[3] = {{0, 0}, {3, 3}, {0, 3}};
   mal::point_t * tops = nullptr;
+
   try {
     figures[0] = new mal::Rectangle(4, 6, {10, 10});
     figures[1] = new mal::Triangle(triangleTops);
@@ -31,6 +36,5 @@ int main()
   delete figures[0];
   delete figures[1];
   delete figures[2];
-
   delete[] tops;
 }

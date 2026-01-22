@@ -12,7 +12,7 @@ namespace malashenko {
     void move(double dx, double dy) override;
     void scale(double k) override;
 
-    private:
+  private:
     size_t length_;
     point_t * tops_;
     point_t pos_;

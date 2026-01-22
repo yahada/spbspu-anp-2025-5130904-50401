@@ -2,10 +2,20 @@
 
 namespace malashenko {
   Rectangle::Rectangle(double width, double height, point_t pos):
-    width_(width),
-    height_(height),
     pos_(pos)
-  {}
+  {
+    if (width > 0) {
+      width_ = width;
+    } else {
+      throw std::invalid_argument("width of rectangle must be positive");
+    }
+
+    if (height > 0) {
+      height_ = height;
+    } else {
+      throw std::invalid_argument("height of rectangle must be positive");
+    }
+  }
 
   double Rectangle::getArea() const
   {
@@ -30,6 +40,10 @@ namespace malashenko {
 
   void Rectangle::scale(double k)
   {
+    if (k < 0) {
+      throw std::invalid_argument("Scale coefficient of rectangle must be positive");
+    }
+
     width_ *= k;
     height_ *= k;
   }

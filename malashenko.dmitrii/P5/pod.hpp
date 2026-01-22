@@ -1,6 +1,6 @@
 #ifndef POD
 #define POD
-namespace malashenko{
+namespace malashenko {
   struct point_t {
     double x, y;
   };
@@ -10,5 +10,4 @@ namespace malashenko{
     point_t pos;
   };
 }
-
 #endif
